@@ -4,27 +4,35 @@ import asyncio
 import websockets
 import logging
 import pyperclip
-
-async def hello(websocket, path):
+import json
+async def mysocket(websocket, path):
     content=""
+    
     print("started")
     while True:
         print(path[1:])
-        if int(path[1:]) == 1:
+        if path[1:] == "1":
             msg = await websocket.recv()
+            msg=json.loads(msg)
             print(f"< {msg}")
-            pyperclip.copy(msg)
-            await websocket.send(msg)
-        elif int(path[1:]) == 0:
+            if msg["type"] == "clipboard":
+                pyperclip.copy(msg["data"])
+            else:
+                pass
+            # await websocket.send(msg)
+        elif path[1:] == "getClipboard":
             if not content==pyperclip.paste():
                 content=pyperclip.paste()
-                await websocket.send(content)
+                msg={"type":"clipboard","data":content}
+                msg = json.dumps(msg)
+                print(msg)
+                await websocket.send(msg)
             await asyncio.sleep(3)
 
         else:
             break
 
-start_server = websockets.serve(hello, host=None,port=8765)
+start_server = websockets.serve(mysocket, host=None,port=8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
