@@ -7,6 +7,7 @@ import pyperclip
 
 async def hello(websocket, path):
     content=""
+    print("started")
     while True:
         print(path[1:])
         if int(path[1:]) == 1:

@@ -1,0 +1,4 @@
+{
+    "type": "<clipboard  | keyboard_key | command>",
+    "data": ""
+}
