@@ -7,25 +7,25 @@ import pyperclip
 import json
 async def mysocket(websocket, path):
     content=""
-    
     print("started")
     while True:
-        print(path[1:])
-        if path[1:] == "1":
-            msg = await websocket.recv()
+        if path[1:] == "send":
+            msg =await websocket.recv()
             msg=json.loads(msg)
             print(f"< {msg}")
             if msg["type"] == "clipboard":
                 pyperclip.copy(msg["data"])
             else:
                 pass
+            
             # await websocket.send(msg)
         elif path[1:] == "getClipboard":
             if not content==pyperclip.paste():
                 content=pyperclip.paste()
                 msg={"type":"clipboard","data":content}
                 msg = json.dumps(msg)
-                print(msg)
+                print(f"> {msg}")
+
                 await websocket.send(msg)
             await asyncio.sleep(3)
 
