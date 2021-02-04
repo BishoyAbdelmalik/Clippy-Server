@@ -16,6 +16,11 @@ async def mysocket(websocket, path):
             print(f"< {msg}")
             if msg["type"] == "clipboard":
                 pyperclip.copy(msg["data"])
+            elif msg["type"]=="command":
+                if msg["data"]=="volumeUp":
+                    pyautogui.press("volumeup")
+                if msg["data"]=="volumeDown":
+                    pyautogui.press("volumedown")
             else:
                 pass
             
