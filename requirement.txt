@@ -1,0 +1,6 @@
+asyncio
+websockets
+logging
+pyperclip
+json
+pyautogui

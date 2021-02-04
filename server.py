@@ -5,6 +5,7 @@ import websockets
 import logging
 import pyperclip
 import json
+import pyautogui
 async def mysocket(websocket, path):
     content=""
     print("started")
