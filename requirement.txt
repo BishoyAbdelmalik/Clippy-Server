@@ -1,6 +1,5 @@
 asyncio
-websockets
-logging
+PyAutoGUI
 pyperclip
-json
-pyautogui
+websockets
+winrt
