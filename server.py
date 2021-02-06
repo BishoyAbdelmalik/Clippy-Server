@@ -6,14 +6,24 @@ import logging
 import pyperclip
 import json
 import pyautogui
+import platform
+import current_playing
+from subprocess import Popen, PIPE
+
+# process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+
 async def mysocket(websocket, path):
     content=""
+    sent=""
+    oldmsg=""
     print("started")
     while True:
         if path[1:] == "send":
-            msg =await websocket.recv()
-            msg=json.loads(msg)
-            print(f"< {msg}")
+            if sent =="":
+                msg =await websocket.recv()
+                oldmsg=msg
+                print(f"< {msg}")
+            msg=json.loads(oldmsg)
             if msg["type"] == "clipboard":
                 pyperclip.copy(msg["data"])
             elif msg["type"]=="command":
@@ -23,6 +33,31 @@ async def mysocket(websocket, path):
                     pyautogui.press("volumeup")
                 if msg["data"]=="volumeDown":
                     pyautogui.press("volumedown")
+                if msg["data"]=="volumeMute":
+                    pyautogui.press("volumemute")
+            elif msg["type"]=="info":
+                # check os 
+                theOS=platform.system().lower()
+                if msg["data"]=="media":
+                    if theOS=="windows":
+                        playing=await current_playing.get_media_info()
+                        if not playing == None:
+                            currently_playing={"type":"media","title":playing["title"],"thumbnail":playing["thumbnail"]}
+                        else:
+                            currently_playing={}
+                        msg={"type":"info","data":currently_playing}
+                        msg=json.dumps(msg)
+                        if not sent==msg:
+                            print(f"> {msg}")
+                            await websocket.send(msg)
+                            sent=msg
+                    elif theOS=="linux":
+                        pass
+                    elif theOS=="darwin":
+                        pass
+                else:
+                    
+                    pass
             else:
                 pass
             

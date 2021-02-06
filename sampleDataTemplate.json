@@ -1,4 +1,4 @@
 {
-    "type": "<clipboard  | keyboard_key | command>",
+    "type": "<clipboard  | keyboard_key | command | info>",
     "data": ""
 }
