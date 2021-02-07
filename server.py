@@ -16,6 +16,10 @@ async def mysocket(websocket, path):
     content=""
     sent=""
     oldmsg=""
+    playing=None
+    # check os 
+    theOS=platform.system().lower()
+    print(websocket.remote_address)
     print("started")
     while True:
         if path[1:] == "send":
@@ -35,26 +39,6 @@ async def mysocket(websocket, path):
                     pyautogui.press("volumedown")
                 if msg["data"]=="volumeMute":
                     pyautogui.press("volumemute")
-            elif msg["type"]=="info":
-                # check os 
-                theOS=platform.system().lower()
-                if msg["data"]=="media":
-                    if theOS=="windows":
-                        playing=await current_playing.get_media_info()
-                        if not playing == None:
-                            currently_playing={"type":"media","title":playing["title"],"thumbnail":playing["thumbnail"]}
-                        else:
-                            currently_playing={}
-                        msg={"type":"info","data":currently_playing}
-                        msg=json.dumps(msg)
-                        if not sent==msg:
-                            print(f"> {msg}")
-                            await websocket.send(msg)
-                            sent=msg
-                    elif theOS=="linux":
-                        pass
-                    elif theOS=="darwin":
-                        pass
                 else:
                     
                     pass
@@ -62,7 +46,7 @@ async def mysocket(websocket, path):
                 pass
             
             # await websocket.send(msg)
-        elif path[1:] == "getClipboard":
+        elif path[1:] == "get":
             if not content==pyperclip.paste():
                 content=pyperclip.paste()
                 msg={"type":"clipboard","data":content}
@@ -70,6 +54,29 @@ async def mysocket(websocket, path):
                 print(f"> {msg}")
 
                 await websocket.send(msg)
+            
+            if theOS=="windows":
+                # get whats playing
+                playingNow=await current_playing.get_media_info()
+                # check if we were playing but now we arent
+                if playingNow==None and not playing==None:
+                    playing=={}
+                # if we are playing something new
+                if not playingNow==playing:
+                    playing=playingNow
+                    if not playing == None:
+                        playingNowDict={"type":"media","title":playing["title"],"thumbnail":playing["thumbnail"]}
+                        
+                    else:
+                        playingNowDict={"type":"media","title":"Nothing Playing","thumbnail":""}
+                    msg={"type":"info","data":playingNowDict}
+                    msg=json.dumps(msg)
+                    print(f"> {msg}")
+                    await websocket.send(msg)
+            elif theOS=="linux":
+                pass
+            elif theOS=="darwin":
+                pass
             await asyncio.sleep(3)
 
         else:
