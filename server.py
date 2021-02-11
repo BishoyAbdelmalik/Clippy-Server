@@ -10,17 +10,24 @@ import platform
 import current_playing
 from subprocess import Popen, PIPE
 
-# process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+# get os and save it
+theOS=platform.system().lower()
 
-async def mysocket(websocket, path):
+# process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+async def send(websocket:websockets.server.WebSocketServerProtocol,msg:dict):
+    if not isinstance(msg,dict):
+        raise TypeError("msg need to be a dict") 
+    else:
+        msg=json.dumps(msg)
+        print(f"> {msg}")
+        await websocket.send(msg)
+    
+async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str):
     content=""
     sent=""
     oldmsg=""
     playing=None
-    # check os 
-    theOS=platform.system().lower()
-    print(websocket.remote_address)
-    print("started")
+    print(websocket.remote_address[0]+" connected")
     while True:
         if path[1:] == "send":
             if sent =="":
@@ -50,11 +57,7 @@ async def mysocket(websocket, path):
             if not content==pyperclip.paste():
                 content=pyperclip.paste()
                 msg={"type":"clipboard","data":content}
-                msg = json.dumps(msg)
-                print(f"> {msg}")
-
-                await websocket.send(msg)
-            
+                await send(websocket,msg)
             if theOS=="windows":
                 # get whats playing
                 playingNow=await current_playing.get_media_info()
@@ -70,9 +73,7 @@ async def mysocket(websocket, path):
                     else:
                         playingNowDict={"type":"media","title":"Nothing Playing","thumbnail":""}
                     msg={"type":"info","data":playingNowDict}
-                    msg=json.dumps(msg)
-                    print(f"> {msg}")
-                    await websocket.send(msg)
+                    await send(websocket,msg)
             elif theOS=="linux":
                 pass
             elif theOS=="darwin":
