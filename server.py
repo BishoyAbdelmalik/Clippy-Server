@@ -21,34 +21,31 @@ async def send(websocket:websockets.server.WebSocketServerProtocol,msg:dict):
         msg=json.dumps(msg)
         print(f"> {msg}")
         await websocket.send(msg)
-    
+def execute_commands(command:str):
+    if command=="playPause":
+        pyautogui.press("playpause")
+    if command=="volumeUp":
+        pyautogui.press("volumeup")
+    if command=="volumeDown":
+        pyautogui.press("volumedown")
+    if command=="volumeMute":
+        pyautogui.press("volumemute")
+    else:
+        pass
+    pass
 async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str):
     content=""
-    sent=""
-    oldmsg=""
     playing=None
     print(websocket.remote_address[0]+" connected")
     while True:
         if path[1:] == "send":
-            if sent =="":
-                msg =await websocket.recv()
-                oldmsg=msg
-                print(f"< {msg}")
-            msg=json.loads(oldmsg)
+            msg =await websocket.recv()
+            print(f"< {msg}")
+            msg=json.loads(msg)
             if msg["type"] == "clipboard":
                 pyperclip.copy(msg["data"])
             elif msg["type"]=="command":
-                if msg["data"]=="playPause":
-                    pyautogui.press("playpause")
-                if msg["data"]=="volumeUp":
-                    pyautogui.press("volumeup")
-                if msg["data"]=="volumeDown":
-                    pyautogui.press("volumedown")
-                if msg["data"]=="volumeMute":
-                    pyautogui.press("volumemute")
-                else:
-                    
-                    pass
+                execute_commands(msg["data"])
             else:
                 pass
             
