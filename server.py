@@ -13,15 +13,22 @@ from subprocess import Popen, PIPE
 # get os and save it
 theOS=platform.system().lower()
 
+# maybe use below to start flask
 # process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
-async def send(websocket:websockets.server.WebSocketServerProtocol,msg:dict):
+
+
+async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg:dict)->None:
     if not isinstance(msg,dict):
         raise TypeError("msg need to be a dict") 
     else:
         msg=json.dumps(msg)
         print(f"> {msg}")
         await websocket.send(msg)
-def execute_commands(command:str):
+async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->dict:
+    msg =await websocket.recv()
+    print(f"< {msg}")
+    return json.loads(msg)
+def execute_commands(command:str)->None:
     if command=="playPause":
         pyautogui.press("playpause")
     if command=="volumeUp":
@@ -33,15 +40,16 @@ def execute_commands(command:str):
     else:
         pass
     pass
-async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str):
-    content=""
+async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
+    clipboard_data=""
     playing=None
     print(websocket.remote_address[0]+" connected")
     while True:
+        # what the client sends to the server
         if path[1:] == "send":
-            msg =await websocket.recv()
-            print(f"< {msg}")
-            msg=json.loads(msg)
+            
+            msg = await get_from_client(websocket)
+            
             if msg["type"] == "clipboard":
                 pyperclip.copy(msg["data"])
             elif msg["type"]=="command":
@@ -49,12 +57,12 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             else:
                 pass
             
-            # await websocket.send(msg)
+        # what the server sends to the client
         elif path[1:] == "get":
-            if not content==pyperclip.paste():
-                content=pyperclip.paste()
-                msg={"type":"clipboard","data":content}
-                await send(websocket,msg)
+            if not clipboard_data==pyperclip.paste():
+                clipboard_data=pyperclip.paste()
+                msg={"type":"clipboard","data":clipboard_data}
+                await send_to_client(websocket,msg)
             if theOS=="windows":
                 # get whats playing
                 playingNow=await current_playing.get_media_info()
@@ -70,7 +78,7 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
                     else:
                         playingNowDict={"type":"media","title":"Nothing Playing","thumbnail":""}
                     msg={"type":"info","data":playingNowDict}
-                    await send(websocket,msg)
+                    await send_to_client(websocket,msg)
             elif theOS=="linux":
                 pass
             elif theOS=="darwin":
