@@ -22,9 +22,9 @@ async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg
     if not isinstance(msg,dict):
         raise TypeError("msg need to be a dict") 
     else:
-        msg=json.dumps(msg)
-        print(f"> {msg}")
-        await websocket.send(msg)
+        msg_str=json.dumps(msg)
+        print(f"> {msg_str}")
+        await websocket.send(msg_str)
 async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->dict:
     msg =await websocket.recv()
     print(f"< {msg}")
