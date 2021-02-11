@@ -9,6 +9,7 @@ import pyautogui
 import platform
 import current_playing
 from subprocess import Popen, PIPE
+import signal
 
 # get os and save it
 theOS=platform.system().lower()
@@ -40,58 +41,59 @@ def execute_commands(command:str)->None:
     else:
         pass
     pass
+
+
+clipboard_data=""
 async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
-    clipboard_data=""
+    global clipboard_data
+    global theOS
     playing=None
     print(websocket.remote_address[0]+" connected")
-    while True:
-        # what the client sends to the server
-        if path[1:] == "send":
-            
-            msg = await get_from_client(websocket)
-            
-            if msg["type"] == "clipboard":
-                pyperclip.copy(msg["data"])
-            elif msg["type"]=="command":
-                execute_commands(msg["data"])
-            else:
-                pass
-            
-        # what the server sends to the client
-        elif path[1:] == "get":
-            if not clipboard_data==pyperclip.paste():
-                clipboard_data=pyperclip.paste()
-                msg={"type":"clipboard","data":clipboard_data}
-                await send_to_client(websocket,msg)
-            if theOS=="windows":
-                # get whats playing
-                playingNow=await current_playing.get_media_info()
-                # check if we were playing but now we arent
-                if playingNow==None and not playing==None:
-                    playing=={}
-                # if we are playing something new
-                if not playingNow==playing:
-                    playing=playingNow
-                    if not playing == None:
-                        playingNowDict={"type":"media","title":playing["title"],"thumbnail":playing["thumbnail"]}
-                        
-                    else:
-                        playingNowDict={"type":"media","title":"Nothing Playing","thumbnail":""}
-                    msg={"type":"info","data":playingNowDict}
-                    await send_to_client(websocket,msg)
-            elif theOS=="linux":
-                pass
-            elif theOS=="darwin":
-                pass
-            await asyncio.sleep(3)
-
+    # what the client sends to the server
+    if path[1:] == "send":   
+        msg = await get_from_client(websocket)
+        if msg["type"] == "clipboard":
+            clipboard_data=msg["data"]
+            pyperclip.copy(clipboard_data)
+        elif msg["type"]=="command":
+            execute_commands(msg["data"])
         else:
-            break
+            pass
+        # await websockets.protocol.WebSocketCommonProtocol.close(1000,"no reason")
+        return
+    
+    
+    # what the server sends to the client
+    while True and path[1:] == "get":
+        if not clipboard_data==pyperclip.paste():
+            clipboard_data=pyperclip.paste()
+            msg={"type":"clipboard","data":clipboard_data}
+            await send_to_client(websocket,msg)
+        if theOS=="windows":
+            # get whats playing
+            playingNow=await current_playing.get_media_info()
+            # check if we were playing but now we arent
+            if playingNow==None and not playing==None:
+                playing=={}
+            # if we are playing something new
+            if not playingNow==playing:
+                playing=playingNow
+                if not playing == None:
+                    playingNowDict={"type":"media","title":playing["title"],"thumbnail":playing["thumbnail"]}    
+                else:
+                    playingNowDict={"type":"media","title":"Nothing Playing","thumbnail":""}
+                msg={"type":"info","data":playingNowDict}
+                await send_to_client(websocket,msg)
+        elif theOS=="linux":
+            pass
+        elif theOS=="darwin":
+            pass
+        await asyncio.sleep(3)
 
 start_server = websockets.serve(mysocket, host=None,port=8765)
-
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
 logger = logging.getLogger('websockets.server')
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
+
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
