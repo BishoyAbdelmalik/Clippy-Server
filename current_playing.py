@@ -36,8 +36,9 @@ async def get_media_info():
         if not os.path.exists('static'):
             os.makedirs('static')
         filename="./static/media_thumb.jpg"
-        with open(filename, 'wb+') as fobj:
-            fobj.write(bytearray(byte_buffer))
+        if not len(bytearray(byte_buffer)) ==0:
+            with open(filename, 'wb+') as fobj:
+                fobj.write(bytearray(byte_buffer))
         info_dict["thumbnail"]=filename[1:]
         return info_dict
     return None
