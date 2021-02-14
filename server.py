@@ -15,7 +15,7 @@ import qrcode as qr
 import webbrowser
 import validators
 from notification import send_link_toast
-from PC_power import reboot, shutdown 
+from PC_power import hibrnate, reboot, shutdown, sleep 
 def get_my_ip_address(remote_server="google.com"):
     """
     Return the/a network-facing IP number for this system.
@@ -61,6 +61,10 @@ def execute_commands(command:str)->None:
         shutdown()
     if command=="reboot":
         reboot()
+    if command=="sleep":
+        sleep()
+    if command=="hibrnate":
+        hibrnate()
     else:
         pass
     pass
