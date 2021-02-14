@@ -15,6 +15,7 @@ import qrcode as qr
 import webbrowser
 import validators
 from notification import send_link_toast
+from PC_power import reboot, shutdown 
 def get_my_ip_address(remote_server="google.com"):
     """
     Return the/a network-facing IP number for this system.
@@ -56,6 +57,10 @@ def execute_commands(command:str)->None:
         pyautogui.press("volumedown")
     if command=="volumeMute":
         pyautogui.press("volumemute")
+    if command=="shutdown":
+        shutdown()
+    if command=="reboot":
+        reboot()
     else:
         pass
     pass
