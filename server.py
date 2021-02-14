@@ -10,13 +10,31 @@ import platform
 import current_playing
 from subprocess import Popen, PIPE
 import signal
-
+import socket
+import qrcode as qr
+import webbrowser
+import validators
+from notification import send_link_toast
+def get_my_ip_address(remote_server="google.com"):
+    """
+    Return the/a network-facing IP number for this system.
+    """
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s: 
+        s.connect((remote_server, 80))
+        return s.getsockname()[0]
+ip=get_my_ip_address()
+port=8765
+machine_info={"ip":ip,"port":port}
+machine_info_json=json.dumps(machine_info)
+print(machine_info_json)
+qrcode = qr.make(machine_info_json)
+qrcode.save("./static/qrcode.jpg")
 # get os and save it
 theOS=platform.system().lower()
 
 # maybe use below to start flask
-# process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
-
+process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+webbrowser.open("http://localhost:5000/static/qrcode.jpg")
 
 async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg:dict)->None:
     if not isinstance(msg,dict):
@@ -41,7 +59,11 @@ def execute_commands(command:str)->None:
     else:
         pass
     pass
-
+def open_links(msg:str)->None:
+    words=msg.split()
+    for w in words:
+        if validators.url(w):
+            send_link_toast(w)
 
 clipboard_data=""
 async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
@@ -55,6 +77,7 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
         if msg["type"] == "clipboard":
             clipboard_data=msg["data"]
             pyperclip.copy(clipboard_data)
+            open_links(clipboard_data)
         elif msg["type"]=="command":
             execute_commands(msg["data"])
         else:
@@ -90,7 +113,7 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             pass
         await asyncio.sleep(3)
 
-start_server = websockets.serve(mysocket, host=None,port=8765)
+start_server = websockets.serve(mysocket, host=None,port=port)
 logger = logging.getLogger('websockets.server')
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())

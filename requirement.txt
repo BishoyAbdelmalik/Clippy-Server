@@ -3,3 +3,5 @@ PyAutoGUI
 pyperclip
 websockets
 winrt
+qrcode[pil]
+validators
