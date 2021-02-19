@@ -1,2 +1,4 @@
 *.pyc
 static/
+enviroment/
+.vscode/settings.json
