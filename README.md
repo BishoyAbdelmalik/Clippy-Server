@@ -7,6 +7,7 @@ The server (desktop application) for clippy the clipboard and remote control app
 ### Method 1 (python enviroment) ###
 
 
+
 Run the command below to create the python enviroment.
 
 ```shell 
@@ -39,7 +40,7 @@ After activating the python enviroment run:
 ```shell
 python -m pip install -r requirements.txt
 ```
-Now its all set you can run the program.
+Now its all set you can [run the program](#Run the application).
 
 
 To deactive the enviroment just type:
