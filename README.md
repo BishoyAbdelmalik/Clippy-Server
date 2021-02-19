@@ -1,6 +1,6 @@
 # Clippy
 
-The server (desktop application) for clippy the clipboard and remote control application
+The server (desktop application) for clippy the clipboard and remote control application.
 
 ## Setup ##
 
