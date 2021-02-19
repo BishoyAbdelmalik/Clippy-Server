@@ -3,7 +3,6 @@
 The server (desktop application) for clippy the clipboard and remote control application
 
 ## Setup ##
-<hr>
 
 ### Method 1 (python enviroment) ###
 
@@ -61,7 +60,6 @@ Run the command below to install dependencies
 python3 -m pip install -r requirements.txt
 ```
 ## Run the application ##
-<hr>
 
 ### Method 1 (python enviroment) ###
 Activate the python enviroment then run.
