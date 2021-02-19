@@ -40,16 +40,13 @@ After activating the python enviroment run:
 ```shell
 python -m pip install -r requirements.txt
 ```
-Now its all set you can [run the program](#Run the application).
+Now its all set you can [run the program](#run-the-application).
 
 
 To deactive the enviroment just type:
 ```
 deactivate
 ```
-
-
-
 
 
 ### Method 2 (run directly) ###
@@ -60,6 +57,9 @@ Run the command below to install dependencies
 ```shell
 python3 -m pip install -r requirements.txt
 ```
+Now you can [run the program](#method-2-run-directly-1).
+
+
 ## Run the application ##
 
 ### Method 1 (python enviroment) ###
