@@ -13,6 +13,8 @@ import qrcode as qr
 import webbrowser
 import validators
 
+
+
 try:
     import current_playing
     import pyautogui
@@ -22,6 +24,7 @@ except:
     pass
 
 from PC_power import hibrnate, reboot, shutdown, sleep 
+
 def get_my_ip_address(remote_server="google.com"):
     """
     Return the/a network-facing IP number for this system.
@@ -29,6 +32,7 @@ def get_my_ip_address(remote_server="google.com"):
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s: 
         s.connect((remote_server, 80))
         return s.getsockname()[0]
+
 ip=get_my_ip_address()
 port=8765
 machine_info={"ip":ip,"port":port}
@@ -40,11 +44,16 @@ try:
     qrcode.save("./static/qrcode.jpg")
 except:
     print(":icant:")
+
 # get os and save it
 theOS=platform.system().lower()
 
 # maybe use below to start flask
-process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+# process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+from flaskserver import run_flask
+app = run_flask()
+app.run(debug=True,host= '0.0.0.0')
+
 webbrowser.open("http://localhost:5000/static/qrcode.jpg")
 
 async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg:dict)->None:
@@ -54,11 +63,13 @@ async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg
         msg_str=json.dumps(msg)
         print(f"> {msg_str}")
         await websocket.send(msg_str)
+
 async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->dict:
     msg =await websocket.recv()
     print(f"< {msg}")
     return json.loads(msg)
-def execute_commands(command:str)->None:
+
+def execute_commands(command : str) -> None:
     if command=="playPause":
         pyautogui.press("playpause")
     if command=="volumeUp":
@@ -78,6 +89,7 @@ def execute_commands(command:str)->None:
     else:
         pass
     pass
+
 def open_links(msg:str)->None:
     words=msg.split()
     for w in words:
@@ -85,6 +97,7 @@ def open_links(msg:str)->None:
             send_link_toast(w)
 
 clipboard_data=""
+
 async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
     global clipboard_data
     global theOS
