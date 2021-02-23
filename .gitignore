@@ -1,5 +1,5 @@
 *.pyc
-static/
+static/*.jpg
 enviroment/
 .vscode/settings.json
 .venv

@@ -102,12 +102,16 @@ def open_links(msg:str)->None:
             send_link_toast(w)
 
 clipboard_data=""
-
+file_path=""
 async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
     global clipboard_data
     global theOS
+    global file_path
     playing=None
-    print(websocket.remote_address[0]+" connected")
+    client=websocket.remote_address[0]
+    print(client+" connected")
+    if client==ip:
+        print("localhost connected")
     # what the client sends to the server
     if path[1:] == "send":   
         msg = await get_from_client(websocket)
@@ -117,17 +121,24 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             open_links(clipboard_data)
         elif msg["type"]=="command":
             execute_commands(msg["data"])
+        elif msg["type"]=="info_send_file":
+            file_path=msg["data"]
         else:
             pass
         # await websockets.protocol.WebSocketCommonProtocol.close(1000,"no reason")
         return
     
-    
+    file_sent=""
     # what the server sends to the client
     while True and path[1:] == "get":
         if not clipboard_data==pyperclip.paste():
             clipboard_data=pyperclip.paste()
             msg={"type":"clipboard","data":clipboard_data}
+            await send_to_client(websocket,msg)
+        if not file_sent == file_path:
+            file_sent=file_path
+            file_path=""
+            msg={"type":"file_path","data":file_sent}
             await send_to_client(websocket,msg)
         if theOS=="windows":
             # get whats playing
