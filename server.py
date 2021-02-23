@@ -13,15 +13,17 @@ import qrcode as qr
 import webbrowser
 import validators
 
+# Set up logging
+logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG)
 
+clippy_logger = logging.getLogger("clippy_logger")
 
 try:
     import current_playing
     import pyautogui
     from notification import send_link_toast
 except:
-    print("Not running on Windows, probably.")
-    pass
+    clippy_logger.warning("Not running on Windows, probably.")
 
 from PC_power import hibrnate, reboot, shutdown, sleep 
 
@@ -33,17 +35,17 @@ def get_my_ip_address(remote_server="google.com"):
         s.connect((remote_server, 80))
         return s.getsockname()[0]
 
-ip=get_my_ip_address()
-port=8765
-machine_info={"ip":ip,"port":port}
+ip = get_my_ip_address()
+port = 8765
+machine_info = {"ip" : ip, "port" : port}
 machine_info_json=json.dumps(machine_info)
-print(machine_info_json)
+clippy_logger.info(f"Running with IP {ip} on port {port}")
 qrcode = qr.make(machine_info_json)
 try:
     # TODO: Figure out why this doesn't work on Linux
     qrcode.save("./static/qrcode.jpg")
 except:
-    print(":icant:")
+    clippy_logger.error(f"QR code machine broke")
 
 # get os and save it
 theOS=platform.system().lower()
