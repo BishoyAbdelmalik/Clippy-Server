@@ -1,0 +1,7 @@
+asyncio
+PyAutoGUI
+pyperclip
+websockets
+qrcode[pil]
+validators
+Flask

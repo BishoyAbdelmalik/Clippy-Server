@@ -1,4 +1,3 @@
-
 # Flask
 from flask import (
     Flask,
@@ -20,8 +19,7 @@ import os
 
 app = Flask(__name__)
 app.secret_key = urandom(16)
-
-
+    
 @app.route("/")
 def index():
     return  "Hello World"
@@ -50,7 +48,10 @@ def add_header(r):
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
+
+
 if __name__ == "__main__":
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(debug=True,host= '0.0.0.0')
+    

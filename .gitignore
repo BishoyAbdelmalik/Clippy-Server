@@ -2,3 +2,4 @@
 static/
 enviroment/
 .vscode/settings.json
+.venv
