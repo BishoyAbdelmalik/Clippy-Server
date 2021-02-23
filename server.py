@@ -51,12 +51,14 @@ except:
 theOS=platform.system().lower()
 
 # maybe use below to start flask
-process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+process = Popen(['python', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
 # flask is blocking arian
-# from flaskserver import run_flask
-# app = run_flask()
-# app.run(debug=True,host= '0.0.0.0')
+# async def main():
+#     from flaskserver import run_flask
 
+#     app = run_flask()
+#     app.run(debug=True,host= '0.0.0.0')
+# asyncio.run(main())
 webbrowser.open("http://localhost:5000/static/qrcode.jpg")
 
 async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg:dict)->None:
