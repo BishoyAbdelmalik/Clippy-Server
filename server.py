@@ -5,16 +5,22 @@ import websockets
 import logging
 import pyperclip
 import json
-# import pyautogui
 import platform
-# import current_playing
 from subprocess import Popen, PIPE
 import signal
 import socket
 import qrcode as qr
 import webbrowser
 import validators
-# from notification import send_link_toast
+
+try:
+    import current_playing
+    import pyautogui
+    from notification import send_link_toast
+except:
+    print("Not running on Windows, probably.")
+    pass
+
 from PC_power import hibrnate, reboot, shutdown, sleep 
 def get_my_ip_address(remote_server="google.com"):
     """
@@ -29,15 +35,17 @@ machine_info={"ip":ip,"port":port}
 machine_info_json=json.dumps(machine_info)
 print(machine_info_json)
 qrcode = qr.make(machine_info_json)
-qrcode
-# qrcode.save("./static/qrcode.jpg")
+try:
+    # TODO: Figure out why this doesn't work on Linux
+    qrcode.save("./static/qrcode.jpg")
+except:
+    print(":icant:")
 # get os and save it
 theOS=platform.system().lower()
-print(1)
 
 # maybe use below to start flask
 process = Popen(['python3', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
-# webbrowser.open("http://localhost:5000/static/qrcode.jpg")
+webbrowser.open("http://localhost:5000/static/qrcode.jpg")
 
 async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg:dict)->None:
     if not isinstance(msg,dict):
