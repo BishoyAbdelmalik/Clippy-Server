@@ -17,4 +17,4 @@ links saved
 - https://commonsware.com/blog/2019/10/06/storage-situation-internal-storage.html
 - https://developer.android.com/guide/topics/providers/document-provider
 - https://github.com/android/storage-samples/tree/main/MediaStore
-- 
+- https://developers.google.com/web/android/custom-tabs/implementation-guide
