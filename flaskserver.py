@@ -14,6 +14,9 @@ from flask import (
     flash
 )
 from werkzeug.utils import secure_filename
+import webbrowser
+import shutil
+
 # Random
 from os import urandom
 import os
@@ -27,7 +30,7 @@ def run_flask():
     def index():
         return  "Hello World"
                 
-    @app.route("/get")
+    @app.route("/get",methods=["GET"])
     def send():
         try:
             #TODO only accept from ip connected to websocket 
@@ -40,26 +43,40 @@ def run_flask():
             return send_file(file_path, as_attachment=True)
         except FileNotFoundError:
             abort(404)
-    @app.route("/recieve",methods=["POST"])
+    @app.route("/recieve",methods=["GET","POST"])
     def recieve():
-        # check if the post request has the file part
-        print(request.files)
-        if 'file' not in request.files:
-            flash('No file part')
+        if request.method == 'POST':
+            print(request.files)
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                flash('No file part')
+                abort(404)
+            file = request.files['file']
+            # if user does not select file, browser also
+            # submit an empty part without filename
+            if file.filename == '':
+                flash('No selected file')
+                abort(404)
+            if file:
+                if not os.path.exists( app.config['UPLOAD_FOLDER']):
+                    os.makedirs(app.config['UPLOAD_FOLDER'])
+                filename = secure_filename(file.filename)
+                
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                absolute_path= os.path.join(os.getcwd(), os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                webbrowser.open("http://localhost:5000/recieve?f="+absolute_path)
+
+                return absolute_path
+            abort(500)
+        elif request.method=='GET':
+            to_be_delete_files(request.args.get("f"))
+            return send() 
+        else:
             abort(404)
-        file = request.files['file']
-         # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            abort(404)
-        if file:
-            if not os.path.exists( app.config['UPLOAD_FOLDER']):
-                os.makedirs(app.config['UPLOAD_FOLDER'])
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return os.path.join(os.getcwd(), os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        abort(500)
+    def to_be_delete_files(path):
+        # save files to be deleted in a list that will run on a schedule 
+        print(path)
+        pass
     @app.after_request
     def add_header(r):
         """
@@ -74,6 +91,9 @@ def run_flask():
     return app
 
 if __name__ == "__main__":
+    
     app = run_flask()
+    if os.path.exists( app.config['UPLOAD_FOLDER']):
+        shutil.rmtree( app.config['UPLOAD_FOLDER'])
     app.run(debug=True,host= '0.0.0.0')
     
