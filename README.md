@@ -84,12 +84,14 @@ Make sure you have all the `requirements.txt` dependencies up to date
 
 #### HTML ####
 Run
-```bash
+```shell
 make html
 ```
 and the HTML documentation will be generated in `_build/`
 
-#### LaTeX ####
-TODO...
-
-
+#### PDF (LaTeX) ####
+Make sure you have the LaTeX toolchain on your machine. Then, run this:
+```shell
+make latexpdf
+```
+This will generate the LaTeX file(s), and will build the PDF.
