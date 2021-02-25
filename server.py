@@ -6,7 +6,7 @@ import logging
 import pyperclip
 import json
 import platform
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE,CREATE_NEW_CONSOLE
 import signal
 import socket
 import qrcode as qr
@@ -51,7 +51,7 @@ except:
 theOS=platform.system().lower()
 
 # maybe use below to start flask
-process = Popen(['python', 'flaskserver.py'], stdout=PIPE, stderr=PIPE)
+process = Popen(['python', 'flaskserver.py'],creationflags=CREATE_NEW_CONSOLE)
 # flask is blocking arian
 # async def main():
 #     from flaskserver import run_flask
