@@ -6,3 +6,5 @@ winrt
 qrcode[pil]
 validators
 Flask
+sphinx
+recommonmark

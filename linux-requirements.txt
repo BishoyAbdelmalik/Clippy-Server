@@ -5,3 +5,5 @@ websockets
 qrcode[pil]
 validators
 Flask
+sphinx
+recommonmark
