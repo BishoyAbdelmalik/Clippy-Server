@@ -74,3 +74,22 @@ Run the command below.
 ```shell 
 python3 server.py
 ```
+
+
+## Documentation ##
+
+### Build ###
+Make sure you have all the `requirements.txt` dependencies up to date
+(especially `sphinx` and `recommonmark`).
+
+#### HTML ####
+Run
+```bash
+make html
+```
+and the HTML documentation will be generated in `_build/`
+
+#### LaTeX ####
+TODO...
+
+
