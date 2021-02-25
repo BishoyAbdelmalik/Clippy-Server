@@ -4,3 +4,4 @@ enviroment/
 .vscode/settings.json
 .venv
 upload/
+_build/
