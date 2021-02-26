@@ -6,7 +6,7 @@ import logging
 import pyperclip
 import json
 import platform
-from subprocess import Popen, PIPE,CREATE_NEW_CONSOLE
+from subprocess import Popen, PIPE
 import signal
 import socket
 import qrcode as qr
@@ -24,6 +24,7 @@ try:
     import current_playing
     import pyautogui
     from notification import send_link_toast
+    from subprocess import CREATE_NEW_CONSOLE
 except:
     clippy_logger.warning("Not running on Windows, probably.")
 
