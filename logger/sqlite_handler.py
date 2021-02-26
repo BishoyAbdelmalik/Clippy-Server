@@ -9,6 +9,12 @@ class SQLiteHandler(Handler):
     def __init__(self,
                  file_name : str = "logs.db",
                  table_name : str = "logs") -> None:
+        """
+        The Constrctor of the SQLite handler. Instantiating this
+        class, and passing it to the logger would ensure that the
+        logger would add logs to the local database, in addition to
+        the default handler, which is standard output.
+        """
         Handler.__init__(self)
         self.connection = sqlite3.connect(file_name)
         self.file_name = file_name
@@ -25,6 +31,10 @@ class SQLiteHandler(Handler):
         self.connection.commit()
 
     def emit(self, rec : LogRecord) -> None:
+        """
+        This is used whenever the handler logs. This method should add
+        the logs with the corresponding date and time.
+        """
         cursor = self.connection.cursor()
 
         record = rec.getMessage()
