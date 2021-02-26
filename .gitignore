@@ -5,3 +5,5 @@ enviroment/
 .venv
 upload/
 _build/
+*.db
+*.db-journal

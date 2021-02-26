@@ -12,11 +12,13 @@ import socket
 import qrcode as qr
 import webbrowser
 import validators
+import logger
 
 # Set up logging
 logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG)
 
 clippy_logger = logging.getLogger("clippy_logger")
+clippy_logger.addHandler(logger.SQLiteHandler())
 
 try:
     import current_playing
