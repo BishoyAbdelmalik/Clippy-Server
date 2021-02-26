@@ -1,16 +1,15 @@
-from logging import LogRecord
+from logging import LogRecord, Handler
 import sqlite3
-import logging
 from datetime import datetime
 
-class SQLiteHandler(logging.Handler):
+class SQLiteHandler(Handler):
     """
     Class that holds the logging handler that feeds to SQLite.
     """
     def __init__(self,
                  file_name : str = "logs.db",
                  table_name : str = "logs") -> None:
-        logging.Handler.__init__(self)
+        Handler.__init__(self)
         self.connection = sqlite3.connect(file_name)
         self.file_name = file_name
         self.table_name = table_name
