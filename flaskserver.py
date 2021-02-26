@@ -22,6 +22,7 @@ from os import urandom
 import os
 
 def run_flask():
+    """Run Flask"""
     app = Flask(__name__)
     app.secret_key = urandom(16)
     

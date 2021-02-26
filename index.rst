@@ -13,6 +13,20 @@ Welcome to Clippy-Server's documentation!
    ./README.md
    ./TODO.md
 
+This might need to move somewhere else
+
+Logger
+======
+.. autoclass:: logger.SQLiteHandler
+   :members:
+
+Flask Server
+============
+.. automodule:: flaskserver
+   :members:
+
+
+
 
 
 Indices and tables
