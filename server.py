@@ -136,8 +136,9 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
     while True and path[1:] == "get":
         if not clipboard_data==pyperclip.paste():
             clipboard_data=pyperclip.paste()
-            msg={"type":"clipboard","data":clipboard_data}
-            await send_to_client(websocket,msg)
+            if str(clipboard_data).strip() !="":
+                msg={"type":"clipboard","data":clipboard_data}
+                await send_to_client(websocket,msg)
         if not file_sent == file_path and not file_path=="":
             file_sent=file_path
             file_path=""
