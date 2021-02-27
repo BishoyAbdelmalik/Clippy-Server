@@ -69,12 +69,12 @@ async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg
         raise TypeError("msg need to be a dict") 
     else:
         msg_str=json.dumps(msg)
-        print(f"> {msg_str}")
+        clippy_logger.info(f"> {msg_str}")
         await websocket.send(msg_str)
 
 async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->dict:
     msg =await websocket.recv()
-    print(f"< {msg}")
+    clippy_logger.info(f"< {msg}")
     return json.loads(msg)
 
 def execute_commands(command : str) -> None:
@@ -112,9 +112,9 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
     global file_path
     playing=None
     client=websocket.remote_address[0]
-    print(client+" connected")
+    clippy_logger.info(client + " connected")
     if client==ip:
-        print("localhost connected")
+        clippy_logger.info("localhost connected")
     # what the client sends to the server
     if path[1:] == "send":   
         msg = await get_from_client(websocket)
