@@ -13,6 +13,7 @@ import qrcode as qr
 import webbrowser
 import validators
 import logger
+import os
 
 # Set up logging
 logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG)
@@ -79,13 +80,13 @@ async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->
 
 def execute_commands(command : str) -> None:
     if command=="playPause":
-        pyautogui.press("playpause")
+        pyautogui.press(command.lower())
     if command=="volumeUp":
-        pyautogui.press("volumeup")
+        pyautogui.press(command.lower())
     if command=="volumeDown":
-        pyautogui.press("volumedown")
+        pyautogui.press(command.lower())
     if command=="volumeMute":
-        pyautogui.press("volumemute")
+        pyautogui.press(command.lower())
     if command=="shutdown":
         shutdown()
     if command=="reboot":
