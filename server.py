@@ -56,13 +56,7 @@ theOS=platform.system().lower()
 
 # maybe use below to start flask
 process = Popen(['python', 'flaskserver.py'],creationflags=CREATE_NEW_CONSOLE)
-# flask is blocking arian
-# async def main():
-#     from flaskserver import run_flask
 
-#     app = run_flask()
-#     app.run(debug=True,host= '0.0.0.0')
-# asyncio.run(main())
 webbrowser.open("http://localhost:5000/static/qrcode.jpg")
 def take_screenshot() -> str:
     folder='upload'
@@ -133,6 +127,10 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             execute_commands(msg["data"])
         elif msg["type"]=="info_send_file":
             file_path=msg["data"]
+        elif msg["type"]=="get_screenshot":
+            screenshot_path=take_screenshot()
+            msg={"type":"file_screenshot","data":screenshot_path}
+            await send_to_client(websocket,msg)
         else:
             pass
         # await websockets.protocol.WebSocketCommonProtocol.close(1000,"no reason")
