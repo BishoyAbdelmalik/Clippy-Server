@@ -7,6 +7,8 @@ links saved
 - https://developers.google.com/ml-kit/vision/barcode-scanning/android#java
 - https://python-forum.io/Thread-How-can-I-paste-an-entire-file-from-clipboard-to-a-folder
 
+
+https://stackoverflow.com/questions/63737476/screenshot-on-multiple-monitor-setup-pyautogui
 # storage links #
 - https://developer.android.com/training/data-storage/shared
 - https://developer.android.com/training/data-storage/app-specific

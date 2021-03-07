@@ -64,7 +64,13 @@ process = Popen(['python', 'flaskserver.py'],creationflags=CREATE_NEW_CONSOLE)
 #     app.run(debug=True,host= '0.0.0.0')
 # asyncio.run(main())
 webbrowser.open("http://localhost:5000/static/qrcode.jpg")
-
+def take_screenshot() -> str:
+    folder='upload'
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    path=folder+'\\my_screenshot.png'
+    pyautogui.screenshot(path)
+    return os.getcwd()+"\\"+path
 async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg:dict)->None:
     if not isinstance(msg,dict):
         raise TypeError("msg need to be a dict") 
