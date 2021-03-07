@@ -41,12 +41,12 @@ class SQLiteHandler(Handler):
         now = datetime.now()
         date = now.strftime("%Y-%m-%d")
         time = now.strftime("%H:%M:%S")
-
+        record = record.replace('"', '""')
+        record = record.replace("'", "''")
         query = f"""
         INSERT INTO {self.table_name}
         VALUES ("{date}", "{time}", "{record}")
         """
-
         cursor.execute(query)
 
         self.connection.commit()
