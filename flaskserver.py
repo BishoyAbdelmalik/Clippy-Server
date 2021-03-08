@@ -13,6 +13,8 @@ from flask import (
     abort,
     flash
 )
+import logging
+
 from werkzeug.utils import secure_filename
 import webbrowser
 import shutil
@@ -25,6 +27,8 @@ def run_flask():
     """Run Flask"""
     app = Flask(__name__)
     app.secret_key = urandom(16)
+
+    logging.basicConfig(filename="logs/flask.log",level=logging.DEBUG)
     
     app.config['UPLOAD_FOLDER'] = 'upload'
     @app.route("/")

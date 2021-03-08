@@ -7,3 +7,4 @@ upload/
 _build/
 *.db
 *.db-journal
+*.log

@@ -18,9 +18,10 @@ import os
 
 # Set up logging
 logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG)
-
+if not os.path.exists("logs"):
+    os.makedirs("logs")
 clippy_logger = logging.getLogger("clippy_logger")
-clippy_logger.addHandler(logger.SQLiteHandler())
+clippy_logger.addHandler(logger.SQLiteHandler("logs/websocket.db","logs"))
 
 try:
     import current_playing
@@ -56,7 +57,7 @@ except:
 theOS=platform.system().lower()
 
 # maybe use below to start flask
-process = Popen(['python', 'flaskserver.py'],creationflags=CREATE_NEW_CONSOLE)
+process = Popen(['python', 'flaskserver.py'],stdout=PIPE)
 
 webbrowser.open("http://localhost:5000/static/qrcode.jpg")
 def take_screenshot() -> str:
