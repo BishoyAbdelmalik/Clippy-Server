@@ -1,6 +1,7 @@
 # WS server example
 
 import asyncio
+from notification import send_email_toast, send_email_toast
 import websockets
 import logging
 import pyperclip
@@ -104,7 +105,13 @@ def open_links(msg:str)->None:
     for w in words:
         if validators.url(w):
             send_link_toast(w)
-
+def emails_notification(msg:str)->None:
+    words=msg.split()
+    for w in words:
+        if validators.email(w):
+            send_email_toast(w)
+        elif validators.email(w[1:len(w)-1]):
+            send_email_toast(w[1:len(w)-1])
 clipboard_data=""
 file_path=""
 async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
@@ -123,6 +130,7 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             clipboard_data=msg["data"]
             pyperclip.copy(clipboard_data)
             open_links(clipboard_data)
+            emails_notification(clipboard_data)
         elif msg["type"]=="command":
             execute_commands(msg["data"])
         elif msg["type"]=="info_send_file":

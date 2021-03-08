@@ -37,3 +37,38 @@ def send_link_toast(link:str)->None:
     #display notification
     notifier.show(notifications.ToastNotification(xDoc))
 
+def send_email_toast(email:str)->None:
+    #create notifier
+    nManager = notifications.ToastNotificationManager
+    notifier = nManager.create_toast_notifier()
+    #define your notification as string
+    tString = f"""
+    <toast launch="-m webbrowser -t mailto:{email}">
+        <visual>
+            <binding template='ToastGeneric'>
+                <text>Send Email to</text>
+                <text>{email}</text>
+            </binding>
+        </visual>
+        <actions>
+
+            <action
+                content="Compose Email"
+                arguments="-m webbrowser -t mailto:{email}"
+                activationType="foreground"/>
+
+            <action
+                content="Remind me later"
+                arguments="action=remindlater&amp;contentId=351"
+                activationType="background"/>
+
+        </actions>
+    </toast>
+    """
+    #convert notification to an XmlDocument
+    xDoc = dom.XmlDocument()
+    xDoc.load_xml(tString)
+
+    #display notification
+    notifier.show(notifications.ToastNotification(xDoc))
+
