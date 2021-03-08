@@ -80,6 +80,20 @@ async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->
     clippy_logger.info(f"< {msg}")
     return json.loads(msg)
 
+def mouse_input(command : str) -> None:
+    if command=="click":
+        pyautogui.click() 
+    if command=="up":
+        # TODO make this use numerical input
+         pyautogui.moveTo(pyautogui.position().x,pyautogui.position().y-10)
+    if command=="down":
+         pyautogui.moveTo(pyautogui.position().x,pyautogui.position().y+10)
+    if command=="left":
+         pyautogui.moveTo(pyautogui.position().x-10,pyautogui.position().y)
+    if command=="right":
+         pyautogui.moveTo(pyautogui.position().x+10,pyautogui.position().y)
+        
+         
 def execute_commands(command : str) -> None:
     if command=="playPause":
         pyautogui.press(command.lower())
@@ -140,6 +154,8 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             screenshot_path=take_screenshot()
             msg={"type":"file_screenshot","data":screenshot_path}
             await send_to_client(websocket,msg)
+        elif msg["type"]=="mouse_input":
+            mouse_input(msg["data"])
         elif msg["type"]=="keyboard_input":
             pyautogui.press(msg["data"])
         else:
