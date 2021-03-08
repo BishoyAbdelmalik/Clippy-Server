@@ -71,7 +71,7 @@ def run_flask():
                 absolute_path= os.path.join(os.getcwd(), os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 webbrowser.open("http://localhost:5000/recieve?f="+absolute_path)
 
-                return absolute_path
+                return "sent"
             abort(500)
         elif request.method=='GET':
             to_be_delete_files(request.args.get("f"))
