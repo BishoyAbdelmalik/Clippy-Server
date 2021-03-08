@@ -95,7 +95,7 @@ def execute_commands(command : str) -> None:
         reboot()
     if command=="sleep":
         sleep()
-    if command=="hibrnate":
+    if command=="hibernate":
         hibrnate()
     else:
         pass
@@ -140,6 +140,8 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             screenshot_path=take_screenshot()
             msg={"type":"file_screenshot","data":screenshot_path}
             await send_to_client(websocket,msg)
+        elif msg["type"]=="keyboard_input":
+            pyautogui.press(msg["data"])
         else:
             pass
         # await websockets.protocol.WebSocketCommonProtocol.close(1000,"no reason")
