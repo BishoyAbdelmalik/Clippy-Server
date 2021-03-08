@@ -19,12 +19,19 @@
                         <input class="input-group-text" type="submit" value="Upload">
                     </div>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="file" required>
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <input type="file" class="custom-file-input" id="file" name="file" required>
+                        <label class="custom-file-label" id="filename" for="inputGroupFile01">Choose file</label>
                     </div>
                 </div>
 
             </form>
+            <script src="/static/js/jquery.min.js" "></script>
+            <script>
+                $("#file ").on("change ",()=>{
+                    var filename=$('#file').val().split('\\').pop()
+                    $("#filename ").html(filename)
+                })
+            </script>
         </div>
     </body>
 
