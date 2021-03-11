@@ -15,6 +15,7 @@ import webbrowser
 import validators
 import logger
 import os
+import sys
 
 # Set up logging
 logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG)
@@ -55,9 +56,8 @@ except:
 
 # get os and save it
 theOS=platform.system().lower()
-
 # maybe use below to start flask
-process = Popen(['python', 'flaskserver.py'],stdout=PIPE)
+process = Popen([sys.executable, 'flaskserver.py'],stdout=PIPE)
 
 webbrowser.open("http://localhost:5000/static/qrcode.jpg")
 def take_screenshot() -> str:
