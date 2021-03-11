@@ -1,5 +1,6 @@
 {
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
-    "python.analysis.typeCheckingMode":"basic"
+    "python.analysis.typeCheckingMode":"basic",
+    "python.terminal.activateEnvironment": true
 }
