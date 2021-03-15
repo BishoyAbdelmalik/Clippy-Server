@@ -36,9 +36,8 @@ def get_flask_port_when_up(path:str) -> int:
                 requests.get("http://localhost:"+str(port)+"/")
                 return port 
             except:
-                time.sleep(0.5)
-        else:
-            time.sleep(0.5)
+                continue
+        time.sleep(0.5)
         
         
     
