@@ -162,10 +162,13 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             screenshot_path=take_screenshot()
             msg={"type":"file_screenshot","data":screenshot_path}
             await send_to_client(websocket,msg)
-        elif msg["type"]=="mouse_input":
-            mouse_input(msg["data"])
-        elif msg["type"]=="keyboard_input":
-            pyautogui.press(msg["data"])
+        elif msg["type"]=="mouse_input" or msg["type"]=="keyboard_input":
+            while True:
+                if msg["type"]=="mouse_input":
+                    mouse_input(msg["data"])
+                elif  msg["type"]=="keyboard_input":
+                    pyautogui.press(msg["data"])
+                msg = await get_from_client(websocket)                
         else:
             pass
         # await websockets.protocol.WebSocketCommonProtocol.close(1000,"no reason")
