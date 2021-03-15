@@ -9,18 +9,17 @@ import json
 import platform
 from subprocess import Popen, PIPE
 import signal
-import socket
 import qrcode as qr
 import webbrowser
 import validators
 import logger
 import os
 import sys
+from helper import get_my_ip_address, is_port_in_use, create_dir_if_missing,get_flask_port_when_up
 
 # Set up logging
 logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG)
-if not os.path.exists("logs"):
-    os.makedirs("logs")
+create_dir_if_missing("logs")
 clippy_logger = logging.getLogger("clippy_logger")
 clippy_logger.addHandler(logger.SQLiteHandler("logs/websocket.db","logs"))
 
@@ -28,25 +27,37 @@ try:
     import current_playing
     import pyautogui
     from notification import send_link_toast
-    from subprocess import CREATE_NEW_CONSOLE
 except:
     clippy_logger.warning("Not running on Windows, probably.")
 
 from PC_power import hibrnate, reboot, shutdown, sleep 
 
-def get_my_ip_address(remote_server="google.com"):
-    """
-    Return the/a network-facing IP number for this system.
-    """
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s: 
-        s.connect((remote_server, 80))
-        return s.getsockname()[0]
+create_dir_if_missing("config")
+# maybe use below to start flask
+process = Popen([sys.executable, 'flaskserver.py'],stdout=PIPE)
 
 ip = get_my_ip_address()
 port = 8765
+config_path="config/websocket.json"
+if os.path.exists(config_path):
+    loaded_machine_info=json.load(open(config_path,"r"))
+    port = loaded_machine_info["port"]
+        
+# change port if port taken 
+while is_port_in_use(port):
+    port=port+1
+    
 machine_info = {"ip" : ip, "port" : port}
 machine_info_json=json.dumps(machine_info)
+with open(config_path,"w") as f:
+    print(machine_info_json,file=f)
+    f.close()
+flask_port=get_flask_port_when_up("config/flask.json")
 clippy_logger.info(f"Running with IP {ip} on port {port}")
+clippy_logger.info(f"Flask Running with IP {ip} on port {flask_port}")
+
+machine_info_json=json.dumps({"ip" : ip, "port" : port,"flask_port":flask_port})
+
 qrcode = qr.make(machine_info_json)
 try:
     # TODO: Figure out why this doesn't work on Linux
@@ -56,14 +67,11 @@ except:
 
 # get os and save it
 theOS=platform.system().lower()
-# maybe use below to start flask
-process = Popen([sys.executable, 'flaskserver.py'],stdout=PIPE)
 
-webbrowser.open("http://localhost:5000/static/qrcode.jpg")
+webbrowser.open("http://localhost:"+str(flask_port)+"/static/qrcode.jpg")
 def take_screenshot() -> str:
     folder='upload'
-    if not os.path.exists(folder):
-        os.makedirs(folder)
+    create_dir_if_missing(folder)
     path=folder+'\\my_screenshot.png'
     pyautogui.screenshot(path)
     return os.getcwd()+"\\"+path

@@ -1,4 +1,5 @@
 # Flask
+import json
 from flask import (
     Flask,
     render_template,
@@ -14,11 +15,12 @@ from flask import (
     flash
 )
 import logging
+import flask
 
 from werkzeug.utils import secure_filename
 import webbrowser
 import shutil
-
+from helper import create_dir_if_missing, is_port_in_use
 # Random
 from os import urandom
 import os
@@ -63,8 +65,7 @@ def run_flask():
                 flash('No selected file')
                 abort(404)
             if file:
-                if not os.path.exists( app.config['UPLOAD_FOLDER']):
-                    os.makedirs(app.config['UPLOAD_FOLDER'])
+                create_dir_if_missing(app.config['UPLOAD_FOLDER'])
                 filename = secure_filename(file.filename)
                 
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -98,7 +99,19 @@ def run_flask():
 if __name__ == "__main__":
     
     app = run_flask()
+    create_dir_if_missing("config")
+    config_path="config/flask.json"
     if os.path.exists( app.config['UPLOAD_FOLDER']):
         shutil.rmtree( app.config['UPLOAD_FOLDER'])
-    app.run(debug=True,host= '0.0.0.0')
+    
+    port=5000
+    if os.path.exists(config_path):
+        loaded_machine_info=json.load(open(config_path,"r"))
+        port = loaded_machine_info["port"]
+    while is_port_in_use(port):
+        port=port+1
+    with open(config_path,"w") as f:
+        print(json.dumps({"port":port}),file=f)
+        f.close()
+    app.run(debug=True,host= '0.0.0.0',port=port)
     
