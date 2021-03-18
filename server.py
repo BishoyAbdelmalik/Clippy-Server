@@ -91,15 +91,18 @@ async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->
 def mouse_input(command : str) -> None:
     if command=="click":
         pyautogui.click() 
-    if command=="up":
+    elif command=="up":
         # TODO make this use numerical input
          pyautogui.moveTo(pyautogui.position().x,pyautogui.position().y-10)
-    if command=="down":
+    elif command=="down":
          pyautogui.moveTo(pyautogui.position().x,pyautogui.position().y+10)
-    if command=="left":
+    elif command=="left":
          pyautogui.moveTo(pyautogui.position().x-10,pyautogui.position().y)
-    if command=="right":
+    elif command=="right":
          pyautogui.moveTo(pyautogui.position().x+10,pyautogui.position().y)
+    else:
+        distance=command.split(",")
+        pyautogui.move(int(distance[0]),int(distance[1]))
         
          
 def execute_commands(command : str) -> None:
