@@ -102,7 +102,7 @@ def mouse_input(command : str) -> None:
          pyautogui.moveTo(pyautogui.position().x+10,pyautogui.position().y)
     else:
         distance=command.split(",")
-        pyautogui.move(int(distance[0]),int(distance[1]))
+        pyautogui.move(float(distance[0]),float(distance[1]))
         
          
 def execute_commands(command : str) -> None:
