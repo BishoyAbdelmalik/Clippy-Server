@@ -92,7 +92,10 @@ def mouse_input(command : str) -> None:
     if command=="click":
         pyautogui.click() 
     elif command=="right_click":
-        pyautogui.click(button='right') 
+        pyautogui.click(button='right')
+    elif command.startswith("scroll"):
+         scroll_distance=command.split(",")[1]
+         pyautogui.scroll(int(scroll_distance))
     elif command=="up":
         # TODO make this use numerical input
          pyautogui.moveTo(pyautogui.position().x,pyautogui.position().y-10)
