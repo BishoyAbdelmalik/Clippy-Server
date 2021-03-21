@@ -34,7 +34,8 @@ from PC_power import hibrnate, reboot, shutdown, sleep
 
 create_dir_if_missing("config")
 # maybe use below to start flask
-process = Popen([sys.executable, 'flaskserver.py'],stdout=PIPE)
+flask_process = Popen([sys.executable, 'flaskserver.py'],stdout=PIPE)
+print("Flask PID "+str(flask_process.pid))
 
 ip = get_my_ip_address()
 port = 8765
@@ -108,7 +109,16 @@ def mouse_input(command : str) -> None:
     else:
         distance=command.split(",")
         pyautogui.move(float(distance[0]),float(distance[1]))
-        
+def keyboard_input(command : str) -> None:
+    if command.startswith("hotkey"):
+        keys=command.split(",")[1:]
+        for k in keys:
+            pyautogui.keyDown(k)
+        for k in reversed(keys):
+            pyautogui.keyUp(k)
+    else:
+        pyautogui.press(command)
+    
          
 def execute_commands(command : str) -> None:
     if command=="playPause":
@@ -175,7 +185,7 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
                 if msg["type"]=="mouse_input":
                     mouse_input(msg["data"])
                 elif  msg["type"]=="keyboard_input":
-                    pyautogui.press(msg["data"])
+                    keyboard_input(msg["data"])
                 msg = await get_from_client(websocket)                
         else:
             pass
