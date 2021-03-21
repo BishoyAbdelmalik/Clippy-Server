@@ -29,12 +29,14 @@ async def get_media_info():
         # create the current_media_info dict with the earlier code first
         thumb_stream_ref = info_dict['thumbnail']
         try:
+            filename="./static/media_thumb.jpg"
+            if os.path.exists(filename):
+                os.remove(filename)
             # 5MB (5 million byte) buffer - thumbnail unlikely to be larger
             thumb_read_buffer = Buffer(5000000)
             await read_stream_into_buffer(thumb_stream_ref, thumb_read_buffer)
             buffer_reader = DataReader.from_buffer(thumb_read_buffer)
             byte_buffer = buffer_reader.read_bytes(thumb_read_buffer.length)
-            
             if not os.path.exists('static'):
                 os.makedirs('static')
             filename="./static/media_thumb.jpg"
@@ -42,7 +44,8 @@ async def get_media_info():
                 with open(filename, 'wb+') as fobj:
                     fobj.write(bytearray(byte_buffer))
             info_dict["thumbnail"]=filename[1:]
-        except:
+        except Exception as e:
+            print(e)
             print("something went wrong with getting thumbnail")
             info_dict["thumbnail"]=" "
             
