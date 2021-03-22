@@ -116,6 +116,8 @@ def keyboard_input(command : str) -> None:
             pyautogui.keyDown(k)
         for k in reversed(keys):
             pyautogui.keyUp(k)
+    elif command == "browseropen":
+        webbrowser.open_new("http://localhost:"+str(flask_port))
     else:
         pyautogui.press(command)
     
