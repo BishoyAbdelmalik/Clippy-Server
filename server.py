@@ -69,7 +69,7 @@ except:
 # get os and save it
 theOS=platform.system().lower()
 
-webbrowser.open("http://localhost:"+str(flask_port)+"/static/qrcode.jpg")
+# webbrowser.open("http://localhost:"+str(flask_port)+"/static/qrcode.jpg")
 def take_screenshot() -> str:
     folder='upload'
     create_dir_if_missing(folder)
@@ -227,6 +227,8 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
         elif theOS=="darwin":
             pass
         await asyncio.sleep(3)
+
+icon = Popen([sys.executable, 'system_tray.py',str(os.getpid()),str(flask_port)],stdout=PIPE)
 
 start_server = websockets.serve(mysocket, host=None,port=port)
 logger = logging.getLogger('websockets.server')

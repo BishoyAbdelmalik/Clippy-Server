@@ -8,3 +8,4 @@ validators
 Flask
 sphinx
 recommonmark
+pystray
