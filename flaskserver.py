@@ -19,7 +19,8 @@ import logging
 from werkzeug.utils import secure_filename
 import webbrowser
 import shutil
-from helper import create_dir_if_missing, is_port_in_use
+from helper import create_dir_if_missing, is_port_in_use,get_my_ip_address
+
 # Random
 from os import urandom
 import os
@@ -45,7 +46,7 @@ def run_flask():
             loaded_machine_info=json.load(open(config_path,"r"))
             flask_port = loaded_machine_info["port"]
         ports=[websocket_port,flask_port]
-        return render_template('index.jinja',title="Homepage",ports=ports)
+        return render_template('index.jinja',title="Homepage",ports=ports,ip=get_my_ip_address())
                 
     @app.route("/get",methods=["GET"])
     def send():

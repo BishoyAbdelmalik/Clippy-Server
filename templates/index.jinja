@@ -1,13 +1,26 @@
-{% extends "base.jinja" %}
-{% block title %}{{ title }}{% endblock %}
-
-{% block content %}
-<section class="container">
-    <nav>
-    </nav>
-    <p>Websockets Port: {{ports[0]}}</p>
-    <p>Flask Port: {{ports[1]}}</p>
-    <p>Hello World</p>
-    <img src="http://localhost:{{ports[1]}}/static/qrcode.jpg"/>
+{% extends "base.jinja" %} {% block title %}{{ title }}{% endblock %} {% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Clippy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Send File</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<section class="container mt-3">
+    <h3>System Info:</h3>
+    <p>IP: {{ip}}<br> Websockets Port: {{ports[0]}}<br> Flask Port: {{ports[1]}}</p>
+    <a class="btn btn-primary" href="/edit-config">Edit system info</a>
+    <p></p>
+    <h3 style="position: absolute;">QR Code:</h3>
+    <img class="m-0" src="http://localhost:{{ports[1]}}/static/qrcode.jpg" />
 </section>
 {% endblock %}
