@@ -3,6 +3,11 @@
 
 {% block content %}
 <section class="container">
+    <nav>
+    </nav>
+    <p>Websockets Port: {{ports[0]}}</p>
+    <p>Flask Port: {{ports[1]}}</p>
     <p>Hello World</p>
+    <img src="http://localhost:{{ports[1]}}/static/qrcode.jpg"/>
 </section>
 {% endblock %}

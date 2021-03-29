@@ -15,7 +15,6 @@ from flask import (
     flash
 )
 import logging
-import flask
 
 from werkzeug.utils import secure_filename
 import webbrowser
@@ -35,7 +34,18 @@ def run_flask():
     app.config['UPLOAD_FOLDER'] = 'upload'
     @app.route("/")
     def index():
-        return render_template('index.jinja',title="Homepage")
+        config_path="config/websocket.json"
+        websocket_port=-1
+        if os.path.exists(config_path):
+            loaded_machine_info=json.load(open(config_path,"r"))
+            websocket_port = loaded_machine_info["port"]
+        config_path="config/flask.json"
+        flask_port=-1
+        if os.path.exists(config_path):
+            loaded_machine_info=json.load(open(config_path,"r"))
+            flask_port = loaded_machine_info["port"]
+        ports=[websocket_port,flask_port]
+        return render_template('index.jinja',title="Homepage",ports=ports)
                 
     @app.route("/get",methods=["GET"])
     def send():
