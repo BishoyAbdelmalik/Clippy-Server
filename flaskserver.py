@@ -35,7 +35,7 @@ def run_flask():
     app.config['UPLOAD_FOLDER'] = 'upload'
     @app.route("/")
     def index():
-        return  "Hello World"
+        return render_template('index.jinja',title="Homepage")
                 
     @app.route("/get",methods=["GET"])
     def send():

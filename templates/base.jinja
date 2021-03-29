@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}{% endblock %}</title>
+    <link rel='stylesheet' href='/static/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href="/static/css/style.css" />
+
+    {% endblock %}
+</head>
+<body>
+    {% block js %}
+        <script src='/static/js/jquery.min.js'></script>
+        <script src='/static/js/bootstrap.min.js'></script>
+
+        <script src="/static/js/script.js"></script>
+    {% endblock %}
+    <div id="content">{% block content %}{% endblock %}</div>
+    {% block footer %}
+    <div id="footer">
+        <div class="container text-center">
+            <small>Copyright &copy; 2021</small>
+        </div>
+    </div>
+    {% endblock %}
+
+   
+
+</body>
+</html>
