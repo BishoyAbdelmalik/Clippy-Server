@@ -14,7 +14,6 @@ if __name__ == "__main__":
         webbrowser.open("http://localhost:"+str(flask_port)+"/static/qrcode.jpg")
 
     def close(icon, item):
-        global pid
         os.kill(pid,0)
         system_icon.stop()
     close_item=item('Close',close,checked=None)
