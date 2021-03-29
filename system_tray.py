@@ -9,21 +9,18 @@ if __name__ == "__main__":
     pid=int(args[1])
     flask_port=int(args[2])
     def open_interface(icon, item):
+        webbrowser.open("http://localhost:"+str(flask_port)+"/")
+    def open_qr(icon, item):
         webbrowser.open("http://localhost:"+str(flask_port)+"/static/qrcode.jpg")
 
     def close(icon, item):
         global pid
         os.kill(pid,0)
-        os._exit(0)
-    close_item=item(
-                'Close',
-                close,
-                checked=None)
-    open_interface=item(
-                'Open',
-                open_interface,
-                checked=None)
-    menu=menu(open_interface,close_item)
-    # Update the state in `on_clicked` and return the new state in
-    # a `checked` callable
-    system_icon =icon('Clippy', Image.open("py.png"), menu=menu).run()
+        system_icon.stop()
+    close_item=item('Close',close,checked=None)
+    open_interface_item=item('Open',open_interface,checked=None)
+    viewqrcode_item=item('View QR Code',open_qr,checked=None)
+    menu=menu(open_interface_item,viewqrcode_item,close_item)
+
+    system_icon = icon('Clippy', Image.open("py.png"), menu=menu)
+    system_icon.run()
