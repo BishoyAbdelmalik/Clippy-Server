@@ -24,7 +24,6 @@ clippy_logger = logging.getLogger("clippy_logger")
 clippy_logger.addHandler(logger.SQLiteHandler("logs/websocket.db","logs"))
 
 try:
-    import current_playing
     import pyautogui
     from notification import send_link_toast
 except:
@@ -209,7 +208,11 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             await send_to_client(websocket,msg)
         if theOS=="windows":
             # get whats playing
-            playingNow=await current_playing.get_media_info()
+            playing_process = Popen([sys.executable, 'current_playing.py'],stdout=PIPE)
+            out, err = playing_process.communicate()
+            # print(out)
+            playingNow=json.loads(out)
+            # playingNow=await current_playing.get_media_info()
             # check if we were playing but now we arent
             if playingNow==None and not playing==None:
                 playing=={}

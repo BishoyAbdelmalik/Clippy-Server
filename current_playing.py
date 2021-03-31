@@ -1,6 +1,6 @@
 import asyncio
 import os
-
+import json
 from winrt.windows.media.control import \
     GlobalSystemMediaTransportControlsSessionManager as MediaManager
 from winrt.windows.storage.streams import \
@@ -56,4 +56,4 @@ async def read_stream_into_buffer(stream_ref, buffer):
     readable_stream.read_async(buffer, buffer.capacity, InputStreamOptions.READ_AHEAD)
 
 if __name__ == '__main__':
-    print(asyncio.run(get_media_info()))
+    print(json.dumps(asyncio.run(get_media_info())))
