@@ -65,26 +65,28 @@ def run_flask():
     def recieve():
         if request.method == 'POST':
             print(request.files)
+            print(request.files.getlist("file"))
             # check if the post request has the file part
             if 'file' not in request.files:
                 flash('No file part')
                 abort(404)
-            file = request.files['file']
-            # if user does not select file, browser also
-            # submit an empty part without filename
-            if file.filename == '':
-                flash('No selected file')
-                abort(404)
-            if file:
-                create_dir_if_missing(app.config['UPLOAD_FOLDER'])
-                filename = secure_filename(file.filename)
-                
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                absolute_path= os.path.join(os.getcwd(), os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                webbrowser.open("http://localhost:5000/recieve?f="+absolute_path)
-
-                return "sent"
-            abort(500)
+            files=request.files.getlist("file")
+            absolute_path=[]
+            for file in files:                
+                # if user does not select file, browser also
+                # submit an empty part without filename
+                if file.filename == '':
+                    flash('No selected file')
+                    abort(404)
+                if file:
+                    create_dir_if_missing(app.config['UPLOAD_FOLDER'])
+                    filename = secure_filename(file.filename)
+                    
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    absolute_path.append(os.path.join(os.getcwd(), os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+            for path in absolute_path:
+                webbrowser.open("http://localhost:5000/recieve?f="+path)
+            return "sent"
         elif request.method=='GET':
             to_be_delete_files(request.args.get("f"))
             return send() 
