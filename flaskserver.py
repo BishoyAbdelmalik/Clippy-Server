@@ -20,6 +20,8 @@ from werkzeug.utils import secure_filename
 import webbrowser
 import shutil
 from helper import create_dir_if_missing, is_port_in_use,get_my_ip_address
+from subprocess import Popen, PIPE
+import sys
 
 # Random
 from os import urandom
@@ -47,7 +49,35 @@ def run_flask():
             flask_port = loaded_machine_info["port"]
         ports=[websocket_port,flask_port]
         return render_template('index.jinja',title="Homepage",ports=ports,ip=get_my_ip_address())
-                
+    @app.route("/send",methods=["GET","POST"])
+    def send_to_phone():
+        if request.method == 'POST':
+            print(request.files)
+            print(request.files.getlist("file"))
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                flash('No file part')
+                abort(404)
+            files=request.files.getlist("file")
+            absolute_path=[]
+            for file in files:                
+                # if user does not select file, browser also
+                # submit an empty part without filename
+                if file.filename == '':
+                    flash('No selected file')
+                    abort(404)
+                if file:
+                    create_dir_if_missing(app.config['UPLOAD_FOLDER'])
+                    filename = secure_filename(file.filename)
+                    
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    absolute_path.append(os.path.join(os.getcwd(), os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+            for path in absolute_path:
+                send = Popen([sys.executable, os.getcwd()+"\\send_file.pyw" , path],stdout=PIPE)
+                pass
+            return "sent"
+        else:
+            return render_template('send.jinja',title="Send File(s)")            
     @app.route("/get",methods=["GET"])
     def send():
         try:
@@ -60,7 +90,7 @@ def run_flask():
             print(file_path)
             return send_file(file_path, as_attachment=True)
         except FileNotFoundError:
-            abort(404)
+            abort(404)        
     @app.route("/recieve",methods=["GET","POST"])
     def recieve():
         if request.method == 'POST':

@@ -155,7 +155,7 @@ def emails_notification(msg:str)->None:
         elif validators.email(w[1:len(w)-1]):
             send_email_toast(w[1:len(w)-1])
 clipboard_data=""
-file_path=""
+file_path=[]
 async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
     global clipboard_data
     global theOS
@@ -176,7 +176,7 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
         elif msg["type"]=="command":
             execute_commands(msg["data"])
         elif msg["type"]=="info_send_file":
-            file_path=msg["data"]
+            file_path.append(msg["data"])
         elif msg["type"]=="get_screenshot":
             screenshot_path=take_screenshot()
             msg={"type":"file_screenshot","data":screenshot_path}
@@ -201,9 +201,8 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
             if str(clipboard_data).strip() !="":
                 msg={"type":"clipboard","data":clipboard_data}
                 await send_to_client(websocket,msg)
-        if not file_sent == file_path and not file_path=="":
-            file_sent=file_path
-            file_path=""
+        if not file_path==[]:
+            file_sent=file_path.pop()
             msg={"type":"file_path","data":file_sent}
             await send_to_client(websocket,msg)
         if theOS=="windows":

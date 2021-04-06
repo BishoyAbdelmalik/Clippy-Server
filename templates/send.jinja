@@ -1,0 +1,45 @@
+{% extends "base.jinja" %} {% block title %}{{ title }}{% endblock %} {% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Clippy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/send">Send File(s) <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<section class="container mt-3">
+    <form action="/send" method="POST" enctype="multipart/form-data">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <input class="input-group-text" type="submit" value="Upload">
+            </div>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="file" name="file" multiple required>
+                <label class="custom-file-label" id="filename" for="inputGroupFile01">Choose file</label>
+            </div>
+        </div>
+
+    </form>
+    <script src="/static/js/jquery.min.js" "></script>
+    <script>
+        $("#file ").on("change ",()=>{
+            var names = " ";
+            for (var i = 0; i <$("#file ").get(0).files.length; ++i) {
+                names +=$("#file ").get(0).files[i].name;
+                if(i!=$("#file ").get(0).files.length-1){
+                    names += ", "
+                }
+            }
+            $("#filename ").html(names)
+        })
+    </script>
+</section>
+{% endblock %}
