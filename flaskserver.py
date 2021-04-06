@@ -75,9 +75,10 @@ def run_flask():
             for path in absolute_path:
                 send = Popen([sys.executable, os.getcwd()+"\\send_file.pyw" , path],stdout=PIPE)
                 pass
-            return "sent"
+            # return "sent"
+            return render_template('send.jinja',title="Send File(s)",status="file(s) sent")            
         else:
-            return render_template('send.jinja',title="Send File(s)")            
+            return render_template('send.jinja',title="Send File(s)", status="")            
     @app.route("/get",methods=["GET"])
     def send():
         try:
