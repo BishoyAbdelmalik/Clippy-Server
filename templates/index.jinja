@@ -17,10 +17,19 @@
 </nav>
 <section class="container mt-3">
     <h3>System Info:</h3>
-    <p>IP: {{ip}}<br> Websockets Port: {{ports[0]}}<br> Flask Port: {{ports[1]}}</p>
-    <a class="btn btn-primary" href="/edit-config">Edit system info</a>
+    <p>IP: {{ip}}</p>
+    <p> Websockets Port: <input id="websocket-port" type="number" value="{{ports[0]}}" disabled></p>
+    <p>Flask Port: <input id="flask-port" type="number" value="{{ports[1]}}" disabled></p>
+    <a class="btn btn-primary" id="edit-ports">Edit system info</a>
+    <div id="editing-port" class="flex-d d-none">
+        <a id="cancel" class="btn btn-primary">Cancel</a>
+        <a id="save" class="btn btn-primary">Save</a>
+    </div>
     <p></p>
     <h3 style="position: absolute;">QR Code:</h3>
     <img class="m-0" src="http://localhost:{{ports[1]}}/static/qrcode.jpg" />
+    <script src="/static/js/jquery.min.js" "></script>
+    <script src="/static/js/main.js " "></script>
+
 </section>
 {% endblock %}
