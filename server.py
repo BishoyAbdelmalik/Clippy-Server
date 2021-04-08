@@ -187,7 +187,10 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
                     mouse_input(msg["data"])
                 elif  msg["type"]=="keyboard_input":
                     keyboard_input(msg["data"])
-                msg = await get_from_client(websocket)                
+                msg = await get_from_client(websocket)
+        elif msg["type"]=="PC_name":
+            msg={"type":"PC_name","data":platform.node()}
+            await send_to_client(websocket,msg)            
         else:
             pass
         # await websockets.protocol.WebSocketCommonProtocol.close(1000,"no reason")
