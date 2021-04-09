@@ -45,8 +45,8 @@ async def get_media_info():
                     fobj.write(bytearray(byte_buffer))
             info_dict["thumbnail"]=filename[1:]
         except Exception as e:
-            print(e)
-            print("something went wrong with getting thumbnail")
+            # print(e)
+            # print("something went wrong with getting thumbnail")
             info_dict["thumbnail"]=" "
             
         return info_dict
