@@ -189,13 +189,16 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
                     keyboard_input(msg["data"])
                 msg = await get_from_client(websocket)
         elif msg["type"]=="PC_name":
-            msg={"type":"PC_name","data":platform.node()}
-            await send_to_client(websocket,msg)            
+            if msg["data"] != platform.node():
+                msg={"type":"PC_name","data":platform.node()}
+                await send_to_client(websocket,msg)            
         else:
             pass
         # await websockets.protocol.WebSocketCommonProtocol.close(1000,"no reason")
         return
-    
+    if path[1:]=="get":
+        msg={"type":"PC_name","data":platform.node()}
+        await send_to_client(websocket,msg)   
     file_sent=""
     # what the server sends to the client
     while True and path[1:] == "get":
