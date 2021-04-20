@@ -199,6 +199,7 @@ async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str
     if path[1:]=="get":
         msg={"type":"PC_name","data":platform.node()}
         await send_to_client(websocket,msg)   
+        clipboard_data=""
     file_sent=""
     # what the server sends to the client
     while True and path[1:] == "get":
