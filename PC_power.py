@@ -19,7 +19,8 @@ def shutdown():
     # elif theOS=="darwin":
     #     pass
 def sleep():
-    sleep_cmd="Add-Type -Assembly System.Windows.Forms && [System.Windows.Forms.Application]::SetSuspendState( [System.Windows.Forms.PowerState]::Suspend, $fasle, $fasle);"
+    if theOS=="windows":
+        sleep_cmd="rundll32.exe powrprof.dll,SetSuspendState 0,1,0"
     os.system("powershell "+sleep_cmd)
 def hibrnate():
     if theOS=="windows":
