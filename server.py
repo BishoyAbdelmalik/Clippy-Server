@@ -75,7 +75,7 @@ def take_screenshot() -> str:
     path=folder+'\\my_screenshot.png'
     pyautogui.screenshot(path)
     return os.getcwd()+"\\"+path
-async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg:dict)->None:
+async def send_to_client(websocket,msg:dict)->None:
     if not isinstance(msg,dict):
         raise TypeError("msg need to be a dict") 
     else:
@@ -83,7 +83,7 @@ async def send_to_client(websocket:websockets.server.WebSocketServerProtocol,msg
         clippy_logger.info(f"> {msg_str}")
         await websocket.send(msg_str)
 
-async def get_from_client(websocket:websockets.server.WebSocketServerProtocol)->dict:
+async def get_from_client(websocket)->dict:
     msg =await websocket.recv()
     clippy_logger.info(f"< {msg}")
     return json.loads(msg)
@@ -156,7 +156,7 @@ def emails_notification(msg:str)->None:
             send_email_toast(w[1:len(w)-1])
 clipboard_data=""
 file_path=[]
-async def mysocket(websocket:websockets.server.WebSocketServerProtocol, path:str)->None:
+async def mysocket(websocket, path:str)->None:
     global clipboard_data
     global theOS
     global file_path

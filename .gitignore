@@ -1,6 +1,7 @@
 *.pyc
 static/*.jpg
 enviroment/
+enviroment2/
 .vscode/settings.json
 .venv
 upload/
